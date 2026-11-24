@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le plâtre · Séance 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/*
+VOICE  : cahier d'atelier, clair et précis — un support de cours que l'on remplit.
+IDEA   : le sac de plâtre et la fiche technique : poudre blanche, étiquette bleue.
+PICTURE: le cycle gypse → cuisson → poudre → gâchage → prise, cliquable, en tête.
+COLOUR : blanc plâtre, encre bleu-noir, bleu plâtrier en accent, orange pour la sécurité.
+LAYOUT : bandeau d'en-tête + cycle, sommaire, puis notions, recherches, analyse, synthèse, export.
+*/
+:root{color-scheme:light dark;
+--bg:light-dark(#fafaf8,#14171d);--paper:light-dark(#ffffff,#1c2028);--chalk:light-dark(#ecebe6,#262b35);
+--ink:light-dark(#1b2230,#e9eaee);--mute:light-dark(#5b6270,#a3a9b6);--line:light-dark(#d9d8d2,#343a46);
+--blue:light-dark(#2546c8,#7d97ff);--blue-soft:light-dark(#e6ebfb,#222b4a);--warn:light-dark(#c2410c,#fb923c);--warn-soft:light-dark(#fdeee5,#3a2418);--ok:light-dark(#1d7a46,#5fd194)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Source Sans 3",system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Archivo,system-ui,sans-serif;line-height:1.08;text-wrap:balance;margin:0 0 .5em}
+h1{font-size:clamp(34px,5vw,52px);font-weight:800}
+h2{font-size:clamp(26px,3.4vw,36px);font-weight:800}
+h3{font-size:20px;font-weight:700}
+p{margin:0 0 .8em;max-width:70ch}
+a{color:var(--blue)}
+.band{padding:clamp(28px,4vw,60px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+.alt{background:var(--chalk)}
+.small{font-size:14px;color:var(--mute)}
+code,.f{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em;background:var(--blue-soft);padding:1px 6px;border-radius:4px;overflow-wrap:anywhere}
+
+/* en-tête */
+header.band{background:var(--blue);color:#fff;padding-bottom:0}
+header .kick{font-weight:600;opacity:.85;margin-bottom:6px}
+header h1{color:#fff}
+header p{color:#eef1ff}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(20px,4vw,48px);align-items:end}
+.idcard{background:var(--paper);color:var(--ink);border-radius:10px 10px 0 0;padding:18px 20px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.idcard label{font-size:14px;color:var(--mute);display:block}
+.cyclebox{background:var(--paper);color:var(--ink);border-radius:12px 12px 0 0;padding:14px 14px 0;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px}
+.cyclebox svg{width:100%;height:auto;display:block}
+.node{cursor:pointer}
+.node circle{fill:var(--paper);stroke:var(--blue);stroke-width:3;transition:fill .2s}
+.node text{fill:var(--ink);font:700 15px Archivo,sans-serif;text-anchor:middle;pointer-events:none}
+.node.on circle,.node:hover circle{fill:var(--blue)}
+.node.on text,.node:hover text{fill:#fff}
+.node:focus-visible circle{stroke:var(--warn);stroke-width:5}
+.detail{padding:6px 4px 16px;font-size:16px}
+.detail h3{color:var(--blue)}
+.detail .eq{display:block;margin:8px 0;padding:8px 10px;background:var(--blue-soft);border-radius:6px;font-family:ui-monospace,Menlo,monospace;font-size:14px}
+
+/* nav */
+nav.toc{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--line)}
+nav.toc .scroll{display:flex;gap:4px;padding:8px max(5vw,16px);max-width:1240px;margin:0 auto;align-items:center}
+nav.toc a{flex:none;text-decoration:none;color:var(--ink);padding:9px 12px;border-radius:6px;font-weight:600;font-size:15px}
+nav.toc a:hover{background:var(--chalk)}
+.prog{margin-left:auto;flex:none;font-size:14px;color:var(--mute);display:flex;gap:8px;align-items:center;padding-left:12px}
+.prog i{display:block;width:90px;height:8px;border-radius:4px;background:var(--chalk);overflow:hidden}
+.prog b{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+@media(min-width:900px){nav.toc{position:sticky}}
+.scroll{overflow-x:auto}
+
+/* grilles */
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.card h3{margin-bottom:.35em}
+.card p:last-child{margin-bottom:0}
+.warn{background:var(--warn-soft);border-color:transparent}
+.warn h3{color:var(--warn)}
+ul.clean{margin:0;padding-left:1.1em}
+ul.clean li{margin:.2em 0}
+
+/* simulateurs */
+.sim{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+input[type=range]{width:100%;accent-color:var(--blue);height:44px}
+.big{font:800 clamp(34px,5vw,48px)/1 Archivo,sans-serif;color:var(--blue)}
+.meter{margin:10px 0}
+.meter span{display:flex;justify-content:space-between;font-size:15px}
+.meter i{display:block;height:12px;background:var(--chalk);border-radius:6px;overflow:hidden;margin-top:3px}
+.meter b{display:block;height:100%;background:var(--blue);border-radius:6px;transition:width .25s}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;background:var(--blue-soft);color:var(--blue);font-weight:600;font-size:15px}
+.ovenbar{display:flex;height:34px;border-radius:6px;overflow:hidden;margin:6px 0 4px;font-size:13px}
+.ovenbar div{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;white-space:nowrap;overflow:hidden}
+
+/* adjuvants */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 16px}
+.filters button,.btn{font:600 16px "Source Sans 3",sans-serif;min-height:44px;padding:8px 16px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.filters button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn:focus-visible,.filters button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--warn);outline-offset:2px}
+.adj .tag{font-size:13px;font-weight:600;color:var(--mute)}
+.adj dl{margin:.4em 0 0;font-size:15.5px}
+.adj dt{font-weight:600;margin-top:.35em}
+.adj dd{margin:0}
+
+/* frise */
+.tl{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 14px}
+.tl article{flex:0 0 min(300px,82%);scroll-snap-align:start;background:var(--paper);border:1px solid var(--line);border-top:5px solid var(--blue);border-radius:8px;padding:14px 16px}
+.tl .y{font:800 22px Archivo,sans-serif;color:var(--blue)}
+.tlnav{display:flex;gap:8px;justify-content:flex-end}
+
+/* liens */
+.links a{display:block;padding:7px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.links a:hover{text-decoration:underline}
+.links a small{display:block;color:var(--mute);font-size:14px}
+
+/* travail */
+label.f2{display:block;font-weight:600;margin:14px 0 4px}
+label.f2 small{font-weight:400;color:var(--mute)}
+input[type=text],input[type=date],textarea,select{width:100%;font:16px/1.5 "Source Sans 3",sans-serif;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:7px;padding:9px 11px;min-height:44px}
+textarea{min-height:110px;resize:vertical}
+.theme{margin-bottom:22px}
+.theme details{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:0 20px}
+.theme summary{cursor:pointer;padding:16px 0;font:700 20px Archivo,sans-serif;list-style:none;display:flex;justify-content:space-between;gap:10px}
+.theme summary::after{content:"+";color:var(--blue)}
+.theme details[open] summary::after{content:"−"}
+.theme .inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;padding-bottom:20px}
+.qs{margin:0;padding-left:1.2em}
+.done{color:var(--ok);font-size:14px;font-weight:600}
+table{border-collapse:collapse;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+th{font-family:Archivo,sans-serif;font-size:15px}
+td textarea{min-height:64px}
+.imgprev{max-width:100%;max-height:260px;border-radius:8px;margin-top:8px;display:none}
+
+/* quiz */
+.q{margin-bottom:16px}
+.q fieldset{border:1px solid var(--line);border-radius:10px;padding:12px 16px;background:var(--paper)}
+.q legend{font-weight:600;padding:0 6px}
+.q label{display:flex;gap:10px;align-items:flex-start;padding:7px 4px;cursor:pointer;border-radius:6px}
+.q input{margin-top:6px;accent-color:var(--blue);width:18px;height:18px}
+.q .fb{font-size:15px;margin-top:6px}
+.q .good{background:color-mix(in srgb,var(--ok) 16%,transparent)}
+.q .bad{background:var(--warn-soft)}
+
+.export{background:var(--ink);color:var(--bg)}
+.export h2,.export p{color:var(--bg)}
+.export .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.export .btn{background:transparent;color:var(--bg);border-color:color-mix(in srgb,var(--bg) 40%,transparent)}
+.export .btn.primary{background:var(--bg);color:var(--ink)}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:8px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9}
+#dossier{display:none}
+
+@media(max-width:900px){.hero,.cyclebox,.sim,.theme .inner{grid-template-columns:1fr}.g3{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.g2,.g3{grid-template-columns:1fr}.idcard{grid-template-columns:1fr}.prog i{width:50px}
+ table{font-size:14px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px}.stack td{display:block;border:0;padding:3px 0}.stack td::before{content:attr(data-l);display:block;font-weight:600;font-size:13px;color:var(--mute)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ===== impression : seul le dossier est imprimé ===== */
+@media print{
+ @page{size:A4;margin:16mm 15mm}
+ body{background:#fff;color:#111;font-size:11pt;line-height:1.45}
+ body>*:not(#dossier){display:none!important}
+ #dossier{display:block}
+ #dossier h1{font-size:24pt;margin:0 0 4pt}
+ #dossier h2{font-size:15pt;margin:16pt 0 6pt;padding-bottom:3pt;border-bottom:1.5pt solid #2546c8;color:#2546c8;break-after:avoid}
+ #dossier h3{font-size:12pt;margin:10pt 0 3pt;break-after:avoid}
+ #dossier .ans{white-space:pre-wrap;border-left:2pt solid #ccc;padding:2pt 0 2pt 8pt;margin:0 0 6pt}
+ #dossier .empty{color:#999;font-style:italic}
+ #dossier .cover{border:1.5pt solid #111;padding:12pt 14pt;margin-bottom:14pt}
+ #dossier table{font-size:9.5pt}#dossier th,#dossier td{border:0.6pt solid #999;padding:4pt}
+ #dossier img{max-width:100%;max-height:90mm}
+ #dossier .pb{break-before:page}
+ #dossier .meta{color:#555;font-size:9.5pt}
+}
+</style>
+</head>
+<body>
+
+<header class="band" id="top">
+ <div class="wrap hero">
+  <div>
+   <div class="kick">DN MADe Objet · 2<sup>e</sup> année · Technologie &amp; matériaux</div>
+   <h1>Le plâtre, de la roche à l'objet</h1>
+   <p>Séance 1 (1 h) : notions de base, recherches guidées, première analyse. Vos réponses sont enregistrées dans ce navigateur ; à la fin, générez votre dossier en PDF.</p>
+   <div class="idcard" id="ident">
+    <div><label for="nom">Nom</label><input type="text" id="nom" data-k="nom" autocomplete="family-name"></div>
+    <div><label for="prenom">Prénom</label><input type="text" id="prenom" data-k="prenom" autocomplete="given-name"></div>
+    <div><label for="groupe">Groupe / binôme</label><input type="text" id="groupe" data-k="groupe"></div>
+    <div><label for="date">Date</label><input type="date" id="date" data-k="date"></div>
+   </div>
+  </div>
+  <div class="cyclebox" aria-label="Le cycle du plâtre, interactif">
+   <svg viewBox="0 0 600 430" role="group" aria-label="Cycle du plâtre : cliquez sur une étape">
+    <defs><filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity=".18"/></filter></defs>
+    <circle cx="300" cy="215" r="150" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-width="3" stroke-dasharray="7 7"/>
+    <g id="arrows" fill="currentColor" fill-opacity=".55"></g>
+    <text x="300" y="208" text-anchor="middle" font-family="Archivo" font-weight="800" font-size="20" fill="currentColor">Cycle du plâtre</text>
+    <text x="300" y="232" text-anchor="middle" font-size="14" fill="currentColor" fill-opacity=".65">réversible · recyclable</text>
+    <g id="nodes"></g>
+   </svg>
+   <div class="detail" id="cycDetail" aria-live="polite"></div>
+  </div>
+ </div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+ <div class="scroll">
+  <a href="#notions">Notions</a><a href="#chimie">Chimie</a><a href="#ep">Eau / plâtre</a><a href="#adjuvants">Adjuvants &amp; charges</a><a href="#histoire">Historique</a><a href="#paris">Plâtre parisien</a><a href="#recherches">Recherches</a><a href="#analyse">Analyse</a><a href="#synthese">Synthèse</a><a href="#quiz">Quiz</a><a href="#export">PDF</a>
+  <span class="prog" title="Progression du dossier"><span id="progTxt">0 %</span><i><b id="progBar"></b></i></span>
+ </div>
+</nav>
+
+<main>
+<!-- ============ NOTIONS ============ -->
+<section class="band" id="notions">
+ <div class="wrap">
+  <h2>Ce qu'il faut retenir d'abord</h2>
+  <p>Le plâtre est un <strong>liant minéral</strong> obtenu en chauffant une roche, le <strong>gypse</strong> (sulfate de calcium dihydraté). La cuisson lui retire une partie de son eau ; le gâchage la lui rend. La pâte durcit en redevenant du gypse : c'est une <strong>réaction chimique</strong>, pas un simple séchage.</p>
+  <div class="g3">
+   <div class="card"><h3>Prise rapide et réglable</h3><p>Quelques minutes à une demi-heure selon le plâtre et les adjuvants. On distingue le <em>début</em> et la <em>fin</em> de prise, puis le séchage, qui évacue l'eau en excès.</p></div>
+   <div class="card"><h3>Léger gonflement</h3><p>À la prise, le plâtre gonfle légèrement (de l'ordre de 0,1 à 0,5 %). Il pousse dans les creux du moule : d'où sa finesse de reproduction en moulage.</p></div>
+   <div class="card"><h3>Poreux et « respirant »</h3><p>L'eau en excès laisse des pores en s'évaporant. Le plâtre absorbe et rend l'humidité, et un moule en plâtre aspire l'eau d'une barbotine céramique.</p></div>
+   <div class="card"><h3>Protection au feu</h3><p>Le gypse contient environ 21 % d'eau liée. Au feu, cette eau se libère et freine la montée en température : le plâtre est incombustible.</p></div>
+   <div class="card"><h3>Sensible à l'eau</h3><p>Le gypse est un peu soluble (environ 2 g/L). En extérieur, sous la pluie, un plâtre pur se délave : d'où les mortiers plâtre-chaux et les traitements hydrofuges.</p></div>
+   <div class="card"><h3>Recyclable</h3><p>Broyé et recuit, un plâtre durci redevient du plâtre. La filière française recycle surtout les chutes de plaques de plâtre.</p></div>
+  </div>
+  <div class="g2" style="margin-top:20px">
+   <div class="card"><h3>Vocabulaire de base</h3>
+    <ul class="clean">
+     <li><strong>Gâcher</strong> : mélanger plâtre et eau. On saupoudre le plâtre <em>dans</em> l'eau, on laisse « noyer », puis on mélange.</li>
+     <li><strong>Gâchée</strong> : la quantité préparée en une fois. <strong>Serrer / gâcher clair</strong> : peu ou beaucoup d'eau.</li>
+     <li><strong>Plâtre α / β</strong> : β cuit à sec (construction, moulage courant) ; α cuit sous vapeur, plus dense et plus dur (dentaire, modèles).</li>
+     <li><strong>Staff</strong> : plâtre armé de filasse, moulé. <strong>Stuc</strong> : plâtre ou chaux, poudre de marbre et colle, poli.</li>
+     <li><strong>Tirer au calibre</strong> : profiler une moulure en traînant un gabarit dans le plâtre frais.</li>
+    </ul></div>
+   <div class="card warn"><h3>Sécurité à l'atelier</h3>
+    <ul class="clean">
+     <li>Poudre fine : masque anti-poussière et gâchage au calme, sans soulever de nuage.</li>
+     <li>La prise dégage de la chaleur. <strong>Ne jamais mouler une main ou une partie du corps</strong> dans un volume de plâtre fermé : risque de brûlures graves.</li>
+     <li>Ne pas jeter de plâtre à l'évier : il durcit dans les canalisations. Laisser prendre, puis jeter au bac à déchets plâtre.</li>
+     <li>Le plâtre fait rouiller l'acier ordinaire : armatures en inox, galvanisées ou en fibres.</li>
+    </ul></div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ CHIMIE ============ -->
+<section class="band alt" id="chimie">
+ <div class="wrap">
+  <h2>La chimie : un aller-retour avec l'eau</h2>
+  <div class="g2">
+   <div class="card">
+    <h3>Les deux réactions</h3>
+    <p>Cuisson (déshydratation, absorbe de la chaleur) :</p>
+    <span class="f" style="display:block;padding:8px 10px">CaSO₄·2H₂O → CaSO₄·½H₂O + 3/2 H₂O</span>
+    <p style="margin-top:10px">Gâchage puis prise (réhydratation, dégage de la chaleur) :</p>
+    <span class="f" style="display:block;padding:8px 10px">CaSO₄·½H₂O + 3/2 H₂O → CaSO₄·2H₂O</span>
+    <p style="margin-top:10px"><strong>Mécanisme de prise</strong> (Le Chatelier, 1887) : l'hémihydrate est plus soluble dans l'eau (environ 8 g/L) que le gypse (environ 2 g/L). Il se dissout, l'eau devient sursaturée en gypse, qui précipite en fines aiguilles. Ces aiguilles s'enchevêtrent : c'est ce feutrage qui fait la solidité.</p>
+   </div>
+   <div class="card">
+    <h3>Le four : que devient le gypse selon la température ?</h3>
+    <label for="temp" class="small">Faites varier la température de cuisson (ordres de grandeur)</label>
+    <input type="range" id="temp" min="20" max="1100" step="10" value="150">
+    <div class="ovenbar" aria-hidden="true">
+     <div style="flex:90;background:#8b93a3">gypse</div>
+     <div style="flex:70;background:#2546c8">hémi.</div>
+     <div style="flex:120;background:#5b3fc4">anh. III</div>
+     <div style="flex:500;background:#b45309">anhydrite II</div>
+     <div style="flex:300;background:#7f1d1d">anh. + chaux</div>
+    </div>
+    <div><span class="big" id="tVal">150 °C</span></div>
+    <h3 id="tName" style="margin-top:10px"></h3>
+    <p id="tTxt"></p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ RAPPORT E/P ============ -->
+<section class="band" id="ep">
+ <div class="wrap">
+  <h2>Le geste qui décide de tout : la quantité d'eau</h2>
+  <p>Pour se réhydrater, le plâtre n'a besoin que d'environ <strong>0,19 kg d'eau par kg de poudre</strong>. On en met pourtant 3 à 4 fois plus pour obtenir une pâte travaillable. Tout ce surplus s'évapore et laisse des vides. Modèle simplifié pour un plâtre β :</p>
+  <div class="sim card">
+   <div>
+    <label for="epr"><strong>Rapport eau / plâtre (E/P, en masse)</strong></label>
+    <input type="range" id="epr" min="0.30" max="1.20" step="0.01" value="0.70">
+    <div class="big" id="epVal">0,70</div>
+    <p style="margin-top:8px"><span class="pill" id="epCons"></span></p>
+    <p class="small" id="epRecette"></p>
+   </div>
+   <div>
+    <div class="meter"><span>Porosité estimée <b id="mPor"></b></span><i><b id="bPor"></b></i></div>
+    <div class="meter"><span>Masse volumique sèche <b id="mRho"></b></span><i><b id="bRho"></b></i></div>
+    <div class="meter"><span>Résistance en compression (indicative) <b id="mRes"></b></span><i><b id="bRes"></b></i></div>
+    <p class="small">Calcul : volume du gypse formé + volume d'eau en excès ; résistance par une loi empirique de porosité. Les valeurs réelles dépendent du plâtre, du malaxage et du séchage : vérifiez sur les fiches techniques des fabricants.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ ADJUVANTS ============ -->
+<section class="band alt" id="adjuvants">
+ <div class="wrap">
+  <h2>Modifier le plâtre : adjuvants, charges, fibres, pigments</h2>
+  <p>Un <strong>adjuvant</strong> s'ajoute en petite quantité (souvent moins de 1 %) et modifie un comportement : prise, fluidité, résistance à l'eau. Une <strong>charge</strong> s'ajoute en volume et change la matière elle-même : poids, texture, coût, retrait. Pour chacun, pensez à l'usage en design.</p>
+  <div class="filters" role="group" aria-label="Filtrer">
+   <button data-f="tous" aria-pressed="true">Tous</button><button data-f="Adjuvant" aria-pressed="false">Adjuvants</button><button data-f="Charge" aria-pressed="false">Charges</button><button data-f="Fibre" aria-pressed="false">Fibres</button><button data-f="Couleur / finition" aria-pressed="false">Couleur et finition</button>
+  </div>
+  <div class="g3" id="adjGrid"></div>
+ </div>
+</section>
+
+<!-- ============ HISTOIRE ============ -->
+<section class="band" id="histoire">
+ <div class="wrap">
+  <div style="display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap"><h2 style="margin:0">Repères historiques</h2>
+  <div class="tlnav"><button class="btn" id="tlPrev" aria-label="Précédent">←</button><button class="btn" id="tlNext" aria-label="Suivant">→</button></div></div>
+  <p class="small" style="margin-top:8px">Des jalons pour démarrer, à vérifier et compléter dans vos recherches (les dates anciennes sont approximatives).</p>
+  <div class="tl" id="tl" tabindex="0"></div>
+ </div>
+</section>
+
+<!-- ============ PARIS ============ -->
+<section class="band alt" id="paris">
+ <div class="wrap">
+  <h2>Le plâtre parisien et le mortier plâtre-chaux-sable</h2>
+  <div class="g2">
+   <div class="card">
+    <h3>Pourquoi « plâtre de Paris » ?</h3>
+    <p>Le sous-sol de l'Île-de-France renferme d'épaisses couches de gypse (Montmartre, Belleville, Cormeilles-en-Parisis…). Exploité depuis l'époque gallo-romaine, ce gypse a fait de Paris une ville de plâtre, au point que l'anglais dit encore <em>plaster of Paris</em>.</p>
+    <p>Dans le bâti ancien, le plâtre sert à <strong>hourder</strong> (lier) les moellons, à enduire les façades à pans de bois ou en moellons, et à <strong>tirer</strong> corniches, bandeaux et encadrements.</p>
+    <p>Le « plâtre gros » d'autrefois, cuit au bois, était impur : il contenait de l'anhydrite et des fragments de calcaire qui l'aidaient à tenir à l'extérieur.</p>
+   </div>
+   <div class="card">
+    <h3>Le mortier plâtre-chaux-sable aujourd'hui</h3>
+    <p>Le plâtre moderne, plus pur, résiste mal au ruissellement. Pour les ravalements, on emploie un <strong>mortier plâtre-chaux-sable</strong>. La chaux aérienne améliore la tenue à l'eau ; le sable limite le retrait et la fissuration.</p>
+    <p>Dosage de référence cité par le Musée du Plâtre : <strong>1 volume de chaux aérienne, 3 volumes de plâtre, 2 volumes de sable</strong>. La règle de l'art est le NF DTU 26.1.</p>
+    <p><strong>À éviter</strong> : le ciment sur un support en plâtre. Le sulfate du plâtre réagit avec le ciment et forme des cristaux expansifs qui font éclater l'enduit. Les peintures étanches (filmogènes) piègent l'humidité, cloquent et se décollent.</p>
+    <p>Finitions typiques : lissée, jetée (« jettis »), chiquetée, avec modénatures tirées au calibre.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ RECHERCHES ============ -->
+<section class="band" id="recherches">
+ <div class="wrap">
+  <h2>Vos recherches</h2>
+  <p>Par binôme, ouvrez au moins <strong>deux thèmes</strong> (10 min chacun environ). Pour chaque thème : notez vos réponses <em>avec vos mots</em>, puis vos sources (titre et lien). Les liens s'ouvrent dans un nouvel onglet.</p>
+  <div id="themes"></div>
+ </div>
+</section>
+
+<!-- ============ ANALYSE ============ -->
+<section class="band alt" id="analyse">
+ <div class="wrap">
+  <h2>Analyse : un objet ou un ouvrage en plâtre</h2>
+  <p>Choisissez un objet ou un ouvrage : moule de céramiste, moulure, carreau, lampe, bijou, sculpture, plaque, plâtre orthopédique, objet de designer… Analysez-le comme un matériau mis en œuvre.</p>
+  <div class="g2">
+   <div class="card">
+    <label class="f2" for="a_obj">Objet / ouvrage étudié <small>(nom, auteur, date, lieu)</small></label><input type="text" id="a_obj" data-k="a_obj">
+    <label class="f2" for="a_imgIn">Image <small>(facultatif, intégrée au PDF)</small></label><input type="file" id="a_imgIn" accept="image/*">
+    <img id="a_imgPrev" class="imgprev" alt="Image de l'objet analysé">
+    <label class="f2" for="a_mise">Mode de mise en œuvre principal</label>
+    <select id="a_mise" data-k="a_mise"><option value="">Choisir…</option><option>Coulage dans un moule</option><option>Tirage au calibre / traînage</option><option>Enduit (manuel ou projeté)</option><option>Préfabrication industrielle (plaque, carreau)</option><option>Staff / armé de fibres</option><option>Modelage, taille, sculpture</option><option>Impression 3D / fabrication numérique</option><option>Autre</option></select>
+    <label class="f2" for="a_fonction">Fonction(s) et usage</label><textarea id="a_fonction" data-k="a_fonction"></textarea>
+   </div>
+   <div class="card">
+    <label class="f2" for="a_formule">Formulation supposée <small>(type de plâtre, adjuvants, charges, fibres, finition)</small></label><textarea id="a_formule" data-k="a_formule"></textarea>
+    <label class="f2" for="a_props">Propriétés du plâtre exploitées <small>(et pourquoi ce matériau plutôt qu'un autre)</small></label><textarea id="a_props" data-k="a_props"></textarea>
+    <label class="f2" for="a_limites">Limites, fragilités, entretien, fin de vie</label><textarea id="a_limites" data-k="a_limites"></textarea>
+   </div>
+  </div>
+  <h3 style="margin-top:28px">Comparer avec les polymères vus précédemment</h3>
+  <div class="card scroll"><table class="stack" id="cmp"><thead><tr><th style="width:24%">Critère</th><th>Polymères (thermoplastiques / thermodurs)</th><th>Plâtre</th></tr></thead><tbody></tbody></table></div>
+ </div>
+</section>
+
+<!-- ============ SYNTHESE ============ -->
+<section class="band" id="synthese">
+ <div class="wrap">
+  <h2>Synthèse</h2>
+  <div class="g2">
+   <div class="card">
+    <label class="f2" for="y_def">Définissez le plâtre en trois phrases maximum</label><textarea id="y_def" data-k="y_def"></textarea>
+    <label class="f2" for="y_cycle">Expliquez le cycle gypse → plâtre → gypse avec vos mots</label><textarea id="y_cycle" data-k="y_cycle"></textarea>
+    <label class="f2" for="y_mots">Cinq mots-clés pour décrire le matériau</label><input type="text" id="y_mots" data-k="y_mots">
+   </div>
+   <div class="card">
+    <label class="f2" for="y_poss">Les possibilités du matériau qui vous intéressent pour l'objet</label><textarea id="y_poss" data-k="y_poss"></textarea>
+    <label class="f2" for="y_piste">Une expérimentation à mener en atelier <small>(formulation, charge, texture, moule…)</small></label><textarea id="y_piste" data-k="y_piste"></textarea>
+    <label class="f2" for="y_q">Questions restées sans réponse</label><textarea id="y_q" data-k="y_q" style="min-height:80px"></textarea>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="band alt" id="quiz">
+ <div class="wrap">
+  <h2>Auto-évaluation</h2>
+  <p>Huit questions. Le score est reporté dans votre dossier PDF.</p>
+  <div class="g2" id="quizBox"></div>
+  <p><button class="btn primary" id="qCheck">Corriger</button> <button class="btn" id="qReset">Recommencer</button> <strong id="qScore" style="margin-left:10px"></strong></p>
+ </div>
+</section>
+
+<!-- ============ EXPORT ============ -->
+<section class="band export" id="export">
+ <div class="wrap">
+  <h2>Générer votre dossier PDF</h2>
+  <p>Cliquez sur « Générer le PDF », puis choisissez <strong>« Enregistrer au format PDF »</strong> comme imprimante. Seul votre dossier (identité, recherches, analyse, synthèse, score) est imprimé.</p>
+  <p>Pour continuer chez vous ou sur un autre poste : « Sauvegarder mon travail » télécharge un petit fichier que vous rechargez ensuite.</p>
+  <div class="row">
+   <button class="btn primary" id="bPdf">Générer le PDF</button>
+   <button class="btn" id="bSave">Sauvegarder mon travail (.json)</button>
+   <label class="btn" for="bLoad" style="display:inline-flex;align-items:center">Recharger un travail<input type="file" id="bLoad" accept=".json,application/json" hidden></label>
+   <button class="btn" id="bClear">Tout effacer</button>
+  </div>
+  <p id="clearConfirm" hidden style="margin-top:12px">Effacer toutes vos réponses ? <button class="btn" id="bClearYes">Oui, effacer</button> <button class="btn" id="bClearNo">Annuler</button></p>
+ </div>
+</section>
+</main>
+
+<div id="toast" role="status"></div>
+<div id="dossier"></div>
+
+<script>
+{
+/* ---------- données ---------- */
+const CYCLE=[
+ {k:"Gypse",t:"Le gypse, pierre à plâtre",eq:"CaSO₄·2H₂O",d:"Roche sédimentaire formée par évaporation d'anciennes lagunes salées. On l'extrait en carrière ou en mine (bassin parisien, Provence…). Formes cristallisées : sélénite, « fer de lance », rose des sables ; forme massive et translucide : albâtre gypseux."},
+ {k:"Cuisson",t:"Cuisson : la déshydratation",eq:"CaSO₄·2H₂O → CaSO₄·½H₂O + 3/2 H₂O",d:"Vers 110 à 180 °C, le gypse perd les trois quarts de son eau. Cuit à sec (four, marmite), il donne le plâtre β ; cuit sous pression de vapeur (autoclave), le plâtre α, plus compact. Plus chaud, on obtient des anhydrites (voir le simulateur « four »)."},
+ {k:"Plâtre",t:"La poudre : l'hémihydrate",eq:"CaSO₄·½H₂O",d:"Broyé et tamisé, l'hémihydrate est la poudre blanche vendue en sac. La finesse de mouture et les adjuvants définissent les usages : plâtre de moulage, à modeler, gros, fin, à projeter, de staff, dentaire… La poudre craint l'humidité : stockez-la au sec, sac fermé."},
+ {k:"Gâchage",t:"Gâchage : la poudre rencontre l'eau",eq:"CaSO₄·½H₂O + 3/2 H₂O → CaSO₄·2H₂O",d:"On saupoudre le plâtre dans l'eau, on laisse noyer environ une minute, puis on mélange sans incorporer d'air. L'hémihydrate se dissout ; l'eau devient sursaturée en gypse, qui précipite en aiguilles. Le rapport eau / plâtre fixe la fluidité et la porosité finale."},
+ {k:"Prise",t:"Prise et durcissement : retour au gypse",eq:"aiguilles de gypse enchevêtrées + eau en excès",d:"La pâte épaissit, chauffe, gonfle très légèrement puis durcit en quelques minutes. Le séchage évacue l'eau en excès (des jours selon l'épaisseur) et la résistance augmente encore. Broyé et recuit, ce gypse redevient du plâtre : la boucle est fermée."}
+];
+const OVEN=[
+ {max:105,n:"Gypse (inchangé)",t:"En dessous d'environ 100 °C, le gypse garde son eau de cristallisation. Rien ne se passe, à part le séchage de l'humidité de surface."},
+ {max:180,n:"Hémihydrate : le plâtre",t:"Plage de fabrication du plâtre courant. Prise rapide (quelques minutes à une demi-heure). C'est le « plâtre de Paris » des sculpteurs et des mouleurs."},
+ {max:300,n:"Anhydrite III, dite « soluble »",t:"Toute l'eau est partie, mais la structure reste avide d'eau : au contact de l'air humide, elle se réhydrate vite en hémihydrate. Instable, elle rend les plâtres « nerveux »."},
+ {max:800,n:"Anhydrite II, plâtre « surcuit »",t:"Anhydrite peu soluble : prise très lente, voire nulle sans activateur. Les anciens plâtres cuits au bois en contenaient une part, ce qui ralentissait la prise et améliorait la dureté."},
+ {max:1101,n:"Anhydrite + un peu de chaux",t:"Au-delà de 800 à 900 °C, une partie du sulfate se décompose et libère de la chaux. On obtient le plâtre « à plancher » ou « hydraulique » d'autrefois : prise lente, matériau dur et plus résistant à l'eau."}
+];
+const ADJ=[
+ {n:"Retardateurs de prise",c:"Adjuvant",e:"Allongent le temps ouvert : acides organiques (citrique, tartrique), protéines (kératine), autrefois colle de peau ou d'os.",u:"Staff, stuc, grands moulages, enduits.",p:"Avoir le temps de sculpter, tirer un profil ou couler un grand volume."},
+ {n:"Accélérateurs de prise",c:"Adjuvant",e:"Gypse broyé très fin, qui sert de germes de cristallisation, ou sulfates (de potassium…). Raccourcissent la prise.",u:"Préfabrication, plaques de plâtre, réparations rapides.",p:"Démouler vite, enchaîner les tirages en série."},
+ {n:"Fluidifiants, plastifiants",c:"Adjuvant",e:"Rendent la pâte plus coulante sans ajouter d'eau. Moins d'eau, c'est moins de pores, donc un plâtre plus dense et plus dur.",u:"Plâtres haute dureté, coulages fins, chapes.",p:"Pièces fines, arêtes vives, surfaces plus résistantes."},
+ {n:"Hydrofuges",c:"Adjuvant",e:"Silicones, siliconates, cires : rendent le plâtre déperlant (il ne devient pas étanche pour autant).",u:"Plaques pour pièces humides (type H), enduits de façade.",p:"Objets pour la salle de bain, la cuisine, usage semi-extérieur."},
+ {n:"Rétenteurs d'eau, épaississants",c:"Adjuvant",e:"Éthers de cellulose : la pâte garde son eau sur un support absorbant et s'accroche mieux.",u:"Enduits et plâtres projetés.",p:"Pâtes à modeler ou à appliquer en couches."},
+ {n:"Résines acryliques",c:"Adjuvant",e:"En émulsion, elles forment un film entre les cristaux : plâtre moins cassant, plus résistant à l'eau. Base des composites plâtre-résine utilisés en design.",u:"Mobilier, luminaires, objets fins, terrazzo de plâtre.",p:"Parois minces, pièces manipulées, effets marbrés."},
+ {n:"Chaux aérienne",c:"Charge",e:"Durcit lentement à l'air. Améliore la tenue au ruissellement et la souplesse.",u:"Mortiers plâtre-chaux-sable de façade, stucs.",p:"Matière plus mate, plus durable en extérieur."},
+ {n:"Sable, granulats, gravats",c:"Charge",e:"Réduisent le retrait et le coût, donnent du corps et de la texture. Granulats recyclés possibles.",u:"Mortiers, « béton de plâtre », sols.",p:"Textures brutes, matière d'aspect minéral, réemploi de déchets."},
+ {n:"Perlite, vermiculite, billes allégées",c:"Charge",e:"Granulats très légers : allègent et isolent, améliorent la tenue au feu.",u:"Plâtres allégés, protection incendie.",p:"Objets plus légers, aspect granuleux."},
+ {n:"Poudres minérales",c:"Charge",e:"Poudre de marbre, de calcaire, de céramique (chamotte) : modifient la densité, le toucher, la couleur.",u:"Stucs, faux marbres, finitions polies.",p:"Surfaces minérales, aspect pierre."},
+ {n:"Filasse végétale (chanvre, jute, sisal)",c:"Fibre",e:"Armature traditionnelle : limite la fissuration et permet des pièces minces et résistantes.",u:"Staff : corniches, rosaces, décors moulés.",p:"Coques minces, grandes pièces légères."},
+ {n:"Fibres de verre",c:"Fibre",e:"Courtes ou en mat : forte augmentation de la résistance en flexion.",u:"Plaques renforcées feu, plâtre armé de fibres de verre (GRG), décors architecturaux.",p:"Formes libres, porte-à-faux, parois fines."},
+ {n:"Fibres de bois, paille, cellulose",c:"Fibre",e:"Fibres biosourcées : allègent, isolent et changent la texture.",u:"Panneaux plâtre-fibres, enduits isolants.",p:"Matériaux composites biosourcés, aspect naturel."},
+ {n:"Pigments et oxydes",c:"Couleur / finition",e:"Ajoutés à la poudre, ils teintent dans la masse (oxydes de fer, de chrome…). À peser pour garder la même teinte d'une gâchée à l'autre.",u:"Enduits teintés, scagliola (faux marbre), objets colorés.",p:"Couleur dans la masse, marbrures, strates."},
+ {n:"Finitions de surface",c:"Couleur / finition",e:"Gomme-laque, cire, savon, badigeon de chaux, patines : protègent et changent l'aspect. Le ponçage et le polissage révèlent la matière.",u:"Sculpture, moulages d'art, objets.",p:"Mat, satiné, poli ; patines vieillies, effets bronze."}
+];
+const TL=[
+ {y:"Néolithique",t:"Proche-Orient : premiers enduits et sols au gypse et à la chaux, il y a plusieurs milliers d'années. La fabrication reste empirique pendant des millénaires."},
+ {y:"Égypte ancienne",t:"Mortiers de gypse dans les grandes constructions, enduits muraux et supports de peinture."},
+ {y:"Antiquité romaine",t:"Pline l'Ancien décrit le plâtre. En Gaule, le gypse est exploité en Provence et en Île-de-France dès l'époque gallo-romaine."},
+ {y:"Moyen Âge",t:"Paris se construit au plâtre : carrières de Montmartre et Belleville, cuisson au bois dans des fours rudimentaires, plâtriers organisés en métier."},
+ {y:"1667",t:"Après le grand incendie de Londres (1666), des ordonnances imposent à Paris de couvrir de plâtre les pans de bois des façades. À vérifier : quel texte, quelle portée ?"},
+ {y:"1765",t:"Lavoisier présente à l'Académie des sciences son analyse du gypse : début de l'étude scientifique de la cuisson et de la prise."},
+ {y:"1856",t:"Brevet du staff (Desachy) : plâtre armé de filasse, moulé en atelier. Les décors intérieurs s'industrialisent."},
+ {y:"1887",t:"Henry Le Chatelier explique la prise par dissolution et cristallisation."},
+ {y:"XIXe siècle",t:"Âge d'or des moulages d'art : gypsothèques, ateliers de sculpteurs (plâtres d'atelier de Rodin, musées de moulages)."},
+ {y:"1894",t:"Aux États-Unis, Augustine Sackett dépose un brevet de plaque de plâtre entre feuilles de papier, ancêtre de la plaque moderne."},
+ {y:"1946",t:"Création de Placoplatre : la plaque de plâtre se diffuse en France, la cloison sèche remplace peu à peu la cloison au plâtre gâché."},
+ {y:"1982",t:"Création du Musée du Plâtre à Cormeilles-en-Parisis, aujourd'hui en attente d'un nouveau lieu."},
+ {y:"2008 →",t:"Charte des industriels pour le recyclage des déchets de plâtre ; engagement avec l'État en 2016. Plus de 200 000 tonnes recyclées en 2024."}
+];
+const THEMES=[
+ {id:"hist",t:"Historique",q:["Depuis quand et où utilise-t-on le plâtre ?","Pourquoi Paris est-elle liée au plâtre ? Que dit l'ordonnance de 1667 ?","Comment cuisait-on le plâtre avant l'industrie ? Quels métiers (plâtrier, staffeur, mouleur…) ?","Le plâtre dans l'art : moulages, plâtres d'atelier, gypsothèques."],
+  l:[["Musée du Plâtre (Cormeilles-en-Parisis)","https://www.museeduplatre.fr","Art, science, histoire, patrimoine ; Lettres blanches à télécharger"],["Arts et techniques pour fabriquer du plâtre (PDF)","https://www.museeduplatre.fr/uploads/wAQoCI2E/Artsettechniquespourfabriquerduplatre.pdf","Musée du Plâtre : cuisson empirique, rationalisation XVIIIe–XXe s."],["Grisy-les-Plâtres : extraction et fabrication","https://grisylesplatres.fr/print/pdf/node/779","Carrières et fours traditionnels du Vexin"],["Wikipédia : Plâtre","https://fr.wikipedia.org/wiki/Pl%C3%A2tre","Point d'entrée ; vérifier les sources citées en bas de page"],["Gallica (BnF)","https://gallica.bnf.fr","Rechercher : « plâtrier », « art du chaufournier », « plâtre Montmartre », Encyclopédie de Diderot"]]},
+ {id:"chim",t:"Chimie et géologie",q:["Formule du gypse, de l'hémihydrate, de l'anhydrite ; ce qui change à la cuisson.","Pourquoi la prise est-elle une réaction chimique et pas un séchage ?","Différence entre plâtre α et plâtre β.","Comment le gypse s'est-il formé dans le bassin parisien ?"],
+  l:[["Wikipédia : Gypse","https://fr.wikipedia.org/wiki/Gypse","Minéralogie, formes cristallines, gisements"],["Futura : le sulfate de calcium","https://www.futura-sciences.com/planete/definitions/geologie-sulfate-calcium-1086/","Formation géologique, transformation thermique"],["Techno-Science : Plâtre","https://www.techno-science.net/definition/4731.html","Fabrication, propriétés physiques"],["Mineralinfo (BRGM) : fiche Gypse (PDF)","https://www.mineralinfo.fr/sites/default/files/documents/2023-04/Fiche_Gypse_20210302.pdf","Ressources, usages, filières de recyclage"],["Knauf : le gypse à l'origine du plâtre","https://knauf.com/fr-FR/knauf/etudes-cas/plaque-platre/gestion-durable-gypse-platre","Vrai / faux, cuisson et gâchage"]]},
+ {id:"quot",t:"Le plâtre au quotidien",q:["Repérez dix usages du plâtre ou du gypse autour de vous (bâtiment, santé, art, alimentation, école…).","Pourquoi les céramistes utilisent-ils des moules en plâtre ?","Plaques, carreaux, enduits : quelles différences ?","Que deviennent les déchets de plâtre ?"],
+  l:[["Knauf : le plâtre, matière utile à plusieurs produits","https://knauf.com/fr-FR/knauf/etudes-cas/plaque-platre/platre-matiere-utile-plusieurs-produits","Plâtre à projeter, stuc, propriétés hygrométriques et feu"],["Knauf : revalorisation des plaques de plâtre","https://knauf.com/fr-FR/knauf/etudes-cas/plaque-platre/revalorisation-plaques-platre","Recyclage des plaques"],["Batiweb : plus de 200 000 t de plâtre recyclées en 2024","https://www.batiweb.com/actualites/recyclage/plus-de-200-000-tonnes-de-platre-recyclees-en-2024-46266","Chiffres de la filière"],["Pistes de recherche (mots-clés)","https://www.google.com/search?q=moule+en+pl%C3%A2tre+c%C3%A9ramique+coulage+barbotine","« moule plâtre barbotine », « bande plâtrée », « gypse E516 », « craie gypse »"]]},
+ {id:"adj",t:"Adjuvants, charges et possibilités",q:["Choisissez deux adjuvants et une charge : effet, dosage typique, usage.","Comment rendre le plâtre plus résistant, plus léger, coloré, plus tenace à l'eau ?","Trouvez deux objets ou projets de designers en plâtre ou composite plâtre-résine.","Quelles expérimentations pourrait-on faire en atelier ?"],
+  l:[["Batiweb : adjuvants pour plâtre","https://www.batiweb.com/famille/adjuvant-pour-platre-1905","Familles d'adjuvants et produits"],["Sika : retardateurs pour le plâtre (EN)","https://deu.sika.com/en/construction-products/gypsum-dry-mortar-additives/gypsum-block-gypsum-board-industry/retarders-gypsum-industry.html","Contrôle de la prise, nucléation"],["Pavillon de l'Arsenal / Ciguë : béton de plâtre (PDF)","https://www.pavillon-arsenal.com/data/boutique_02071/fiche/11061/cigue_faire_bat_219a5.pdf","Plâtre + gravats de démolition : une chape « post-ciment »"],["Pistes de recherche (mots-clés)","https://www.google.com/search?q=composite+pl%C3%A2tre+r%C3%A9sine+acrylique+design+objet","« plâtre acrylique design », « scagliola », « staff fibre de verre GRG »"]]},
+ {id:"mort",t:"Le mortier parisien",q:["Comment reconnaître une façade enduite au plâtre à Paris ?","Composition et rôle de chaque constituant d'un mortier plâtre-chaux-sable.","Pourquoi le ciment et les peintures étanches abîment-ils ces façades ?","Quelles finitions et modénatures ? Comment tire-t-on une corniche ?"],
+  l:[["LRMH : petit guide pour reconnaître et restaurer une façade en plâtre (PDF)","https://www.museeduplatre.fr/uploads/dv7ZIzhw/LRMH_guide_facade_platre_3-1.pdf","Histoire du plâtre francilien, désordres, restauration"],["Musée du Plâtre : les enduits plâtre (PDF)","https://museeduplatre.fr/uploads/xhKA2J8w/EnduitPlatreNewsletter03.pdf","Analyses d'enduits anciens, dosage 1 / 3 / 2"],["AQC : désordres après reprise de façades plâtre (PDF)","https://qualiteconstruction.com/wp-content/uploads/2024/01/fi-pathologie-batiment-d06-desordres-reprise-facades-platre.pdf","Mortier plâtre-chaux-sable, rôle de la chaux, NF DTU 26.1"],["Ville de Paris : ravalement des façades (PDF)","https://cdn.paris.fr/paris/2019/07/24/464dd1e077cc817a02f9293fd72fa3e7.pdf","Façades en plâtre : purge, reprise, finitions microporeuses"],["Ministère de la Culture : enduits et ravalement (PDF)","https://www.culture.gouv.fr/en/mc/content/download/61896/file/Enduit%20et%20ravalement%20de%20facade.pdf?version=5","Chaux, couches d'enduit, badigeons"]]}
+];
+const CMP=[["origine","Origine de la matière première"],["mise","Mise en forme"],["durc","Mécanisme de durcissement"],["temp","Température de mise en œuvre"],["feu","Comportement au feu"],["eau","Rapport à l'eau et à l'humidité"],["meca","Comportement mécanique (fragile, souple…)"],["fin","Recyclage, fin de vie"],["aspect","Aspect, toucher, finitions"]];
+const QUIZ=[
+ {q:"Le gypse est…",o:["un sulfate de calcium dihydraté","un carbonate de calcium","un silicate d'aluminium"],a:0,x:"Gypse : CaSO₄·2H₂O. Le carbonate de calcium, c'est le calcaire (et la chaux après cuisson)."},
+ {q:"La cuisson du gypse sert à…",o:["lui ajouter de l'eau","lui retirer une partie de son eau de cristallisation","le faire fondre"],a:1,x:"Vers 110 à 180 °C, il perd 1,5 molécule d'eau sur 2 et devient de l'hémihydrate."},
+ {q:"Le plâtre durcit parce que…",o:["l'eau s'évapore","il refroidit","l'hémihydrate se réhydrate et recristallise en gypse"],a:2,x:"La prise est une réaction chimique (dissolution puis cristallisation), suivie d'un séchage de l'eau en excès."},
+ {q:"Si l'on augmente le rapport eau / plâtre…",o:["le plâtre est plus dense et plus dur","le plâtre est plus poreux et moins résistant","rien ne change après séchage"],a:1,x:"L'eau en excès laisse des pores en s'évaporant."},
+ {q:"Pourquoi le plâtre est-il un bon matériau de moulage ?",o:["Il gonfle légèrement à la prise et reproduit les détails","Il rétrécit fortement et se démoule seul","Il reste souple après la prise"],a:0,x:"Une légère expansion pousse la pâte dans les creux du moule."},
+ {q:"Le plâtre protège du feu car…",o:["il contient des retardateurs de flamme","il libère son eau liée en chauffant","il fond et forme une croûte"],a:1,x:"Environ 21 % d'eau liée : son évaporation absorbe de l'énergie et freine la montée en température."},
+ {q:"Dans un mortier de façade plâtre-chaux-sable, la chaux…",o:["accélère la prise","améliore la tenue au ruissellement","sert uniquement de colorant"],a:1,x:"La chaux aérienne joue un rôle capital dans la tenue à l'eau (fiche AQC)."},
+ {q:"Pour armer une pièce en plâtre, on évite…",o:["la filasse de chanvre","les fibres de verre","le fer à béton ordinaire"],a:2,x:"L'acier ordinaire rouille au contact du plâtre humide : on préfère inox, acier galvanisé ou fibres."}
+];
+
+/* ---------- état ---------- */
+const KEY="dnmade-platre-s1";let S={};
+try{S=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){S={}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast("Stockage plein ou bloqué : pensez à sauvegarder en .json")}};
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const $=id=>document.getElementById(id);
+const toast=m=>{const t=$("toast");t.textContent=m;t.style.opacity=1;clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.opacity=0,2600)};
+const fr=(n,d=2)=>n.toFixed(d).replace(".",",");
+
+/* ---------- cycle ---------- */
+const cx=300,cy=215,R=150;
+const ang=i=>(-90+i*72)*Math.PI/180;
+$("nodes").innerHTML=CYCLE.map((c,i)=>{const x=cx+R*Math.cos(ang(i)),y=cy+R*Math.sin(ang(i));
+ return `<g class="node" data-i="${i}" tabindex="0" role="button" aria-label="${c.t}"><circle cx="${x}" cy="${y}" r="47" filter="url(#sh)"/><text x="${x}" y="${y-2}">${c.k}</text><text x="${x}" y="${y+17}" style="font:600 12px 'Source Sans 3',sans-serif">étape ${i+1}</text></g>`}).join("");
+$("arrows").innerHTML=CYCLE.map((c,i)=>{const a=ang(i)+36*Math.PI/180,x=cx+R*Math.cos(a),y=cy+R*Math.sin(a),deg=a*180/Math.PI+90;
+ return `<path d="M-9,-8 L9,0 L-9,8 Z" transform="translate(${x},${y}) rotate(${deg})"/>`}).join("");
+const showCyc=i=>{const c=CYCLE[i];document.querySelectorAll(".node").forEach(n=>n.classList.toggle("on",+n.dataset.i===i));
+ $("cycDetail").innerHTML=`<div class="small">Étape ${i+1} sur 5 · cliquez sur une autre étape</div><h3>${c.t}</h3><span class="eq">${c.eq}</span><p>${c.d}</p>`};
+document.querySelectorAll(".node").forEach(n=>{n.addEventListener("click",()=>showCyc(+n.dataset.i));n.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();showCyc(+n.dataset.i)}})});
+showCyc(0);
+
+/* ---------- four ---------- */
+const oven=()=>{const t=+$("temp").value;const o=OVEN.find(o=>t<o.max)||OVEN[OVEN.length-1];$("tVal").textContent=t+" °C";$("tName").textContent=o.n;$("tTxt").textContent=o.t};
+$("temp").addEventListener("input",oven);oven();
+
+/* ---------- E/P ---------- */
+const ep=()=>{const E=+$("epr").value;const g=172/145,vg=g/2.32,ex=Math.max(E-0.186,0);const p=ex/(vg+ex),rho=g/(vg+ex),res=80*Math.pow(1-p,3);
+ $("epVal").textContent=fr(E);$("mPor").textContent=Math.round(p*100)+" %";$("bPor").style.width=(p*100)+"%";
+ $("mRho").textContent=fr(rho)+" g/cm³";$("bRho").style.width=Math.min(rho/2.32*100,100)+"%";
+ $("mRes").textContent="≈ "+Math.round(res)+" MPa";$("bRes").style.width=Math.min(res/40*100,100)+"%";
+ $("epCons").textContent=E<0.45?"Pâte très ferme : seulement avec un plâtre α ou un fluidifiant":E<0.62?"Pâte épaisse : modelage, tirage, enduit":E<0.9?"Pâte crémeuse et coulable : moulage courant":"Laitance très liquide : fragile, farine en surface";
+ $("epRecette").textContent=`Exemple : pour 1 kg de plâtre, ${Math.round(E*1000)} g d'eau, soit environ ${fr(E,2)} L.`};
+$("epr").addEventListener("input",ep);ep();
+
+/* ---------- adjuvants ---------- */
+const drawAdj=f=>{$("adjGrid").innerHTML=ADJ.filter(a=>f==="tous"||a.c===f).map(a=>`<div class="card adj"><div class="tag">${a.c}</div><h3>${a.n}</h3><dl><dt>Effet</dt><dd>${a.e}</dd><dt>Usages</dt><dd>${a.u}</dd><dt>Piste design</dt><dd>${a.p}</dd></dl></div>`).join("")};
+document.querySelectorAll(".filters button").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".filters button").forEach(x=>x.setAttribute("aria-pressed",x===b));drawAdj(b.dataset.f)}));
+drawAdj("tous");
+
+/* ---------- frise ---------- */
+$("tl").innerHTML=TL.map(e=>`<article><div class="y">${e.y}</div><p style="margin:6px 0 0">${e.t}</p></article>`).join("");
+const tlMove=d=>{const el=$("tl");el.scrollBy({left:d*(el.querySelector("article").offsetWidth+14),behavior:"smooth"})};
+$("tlPrev").addEventListener("click",()=>tlMove(-1));$("tlNext").addEventListener("click",()=>tlMove(1));
+$("tl").addEventListener("keydown",e=>{if(e.key==="ArrowRight"){e.preventDefault();tlMove(1)}if(e.key==="ArrowLeft"){e.preventDefault();tlMove(-1)}});
+
+/* ---------- thèmes ---------- */
+$("themes").innerHTML=THEMES.map(t=>`<div class="theme"><details id="th_${t.id}"><summary><span>${t.t} <span class="done" id="ok_${t.id}"></span></span></summary><div class="inner">
+ <div><h3>Questions guides</h3><ol class="qs">${t.q.map(q=>`<li>${q}</li>`).join("")}</ol><h3 style="margin-top:16px">Ressources</h3><div class="links">${t.l.map(l=>`<a href="${l[1]}" target="_blank" rel="noopener">${l[0]}<small>${l[2]}</small></a>`).join("")}</div></div>
+ <div><label class="f2" for="r_${t.id}">Vos notes de recherche</label><textarea id="r_${t.id}" data-k="r_${t.id}" style="min-height:220px"></textarea>
+ <label class="f2" for="s_${t.id}">Sources consultées <small>(titre + lien)</small></label><textarea id="s_${t.id}" data-k="s_${t.id}" style="min-height:80px"></textarea></div></div></details></div>`).join("");
+
+/* ---------- comparaison ---------- */
+document.querySelector("#cmp tbody").innerHTML=CMP.map(r=>`<tr><td><strong>${r[1]}</strong></td><td data-l="Polymères"><textarea aria-label="${r[1]} : polymères" data-k="c_${r[0]}_poly"></textarea></td><td data-l="Plâtre"><textarea aria-label="${r[1]} : plâtre" data-k="c_${r[0]}_pl"></textarea></td></tr>`).join("");
+
+/* ---------- champs : lecture / écriture ---------- */
+const fields=()=>document.querySelectorAll("[data-k]");
+const fill=()=>{fields().forEach(el=>{el.value=S[el.dataset.k]||""});
+ if(S.a_img){$("a_imgPrev").src=S.a_img;$("a_imgPrev").style.display="block"}else{$("a_imgPrev").removeAttribute("src");$("a_imgPrev").style.display="none"}
+ restoreQuiz();progress()};
+const progress=()=>{const keys=["nom","prenom",...THEMES.map(t=>"r_"+t.id),"a_obj","a_fonction","a_formule","a_props","a_limites","y_def","y_cycle","y_mots","y_poss","y_piste"];
+ const n=keys.filter(k=>(S[k]||"").trim()).length+(S.q_score!=null?1:0),tot=keys.length+1,p=Math.round(n/tot*100);
+ $("progTxt").textContent=p+" %";$("progBar").style.width=p+"%";
+ THEMES.forEach(t=>{$("ok_"+t.id).textContent=(S["r_"+t.id]||"").trim()?"✓ commencé":""})};
+document.addEventListener("input",e=>{const k=e.target.dataset&&e.target.dataset.k;if(!k)return;S[k]=e.target.value;save();progress()});
+document.addEventListener("change",e=>{const k=e.target.dataset&&e.target.dataset.k;if(!k)return;S[k]=e.target.value;save();progress()});
+
+/* image : réduite avant stockage */
+$("a_imgIn").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+ r.onload=()=>{const im=new Image();im.onload=()=>{const m=1100,sc=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext("2d").drawImage(im,0,0,c.width,c.height);S.a_img=c.toDataURL("image/jpeg",.8);save();fill();toast("Image ajoutée")};im.src=r.result};r.readAsDataURL(f)});
+
+/* ---------- quiz ---------- */
+$("quizBox").innerHTML=QUIZ.map((q,i)=>`<div class="q"><fieldset><legend>${i+1}. ${q.q}</legend>${q.o.map((o,j)=>`<label id="ql${i}_${j}"><input type="radio" name="q${i}" value="${j}"> <span>${o}</span></label>`).join("")}<div class="fb" id="qf${i}"></div></fieldset></div>`).join("");
+const qAns=()=>QUIZ.map((q,i)=>{const c=document.querySelector(`input[name=q${i}]:checked`);return c?+c.value:null});
+const qCorrect=(show)=>{const a=qAns();let s=0;QUIZ.forEach((q,i)=>{q.o.forEach((o,j)=>$("ql"+i+"_"+j).className="");$("qf"+i).textContent="";
+ if(!show)return;if(a[i]===q.a)s++;if(a[i]!=null)$("ql"+i+"_"+a[i]).className=a[i]===q.a?"good":"bad";$("ql"+i+"_"+q.a).className="good";$("qf"+i).textContent=q.x});
+ return {a,s}};
+$("qCheck").addEventListener("click",()=>{const {a,s}=qCorrect(true);S.q_ans=a;S.q_score=s;save();$("qScore").textContent=`Score : ${s} / ${QUIZ.length}`;progress()});
+$("qReset").addEventListener("click",()=>{document.querySelectorAll("#quizBox input").forEach(i=>i.checked=false);qCorrect(false);delete S.q_ans;delete S.q_score;save();$("qScore").textContent="";progress()});
+const restoreQuiz=()=>{document.querySelectorAll("#quizBox input").forEach(i=>i.checked=false);qCorrect(false);$("qScore").textContent="";
+ if(Array.isArray(S.q_ans)){S.q_ans.forEach((v,i)=>{if(v!=null){const el=document.querySelector(`input[name=q${i}][value="${v}"]`);if(el)el.checked=true}});if(S.q_score!=null){qCorrect(true);$("qScore").textContent=`Score : ${S.q_score} / ${QUIZ.length}`}}};
+
+/* ---------- dossier PDF ---------- */
+const A=k=>(S[k]||"").trim()?`<div class="ans">${esc(S[k])}</div>`:`<div class="ans empty">Non renseigné</div>`;
+const buildDossier=()=>{const nm=[S.prenom,S.nom].filter(Boolean).join(" ")||"Étudiant·e";
+ const d=S.date?new Date(S.date).toLocaleDateString("fr-FR"):new Date().toLocaleDateString("fr-FR");
+ let h=`<div class="cover"><div class="meta">DN MADe Objet · 2e année · Technologie &amp; matériaux</div><h1>Le plâtre : recherches, analyse, synthèse</h1>
+ <div><strong>${esc(nm)}</strong>${S.groupe?" · "+esc(S.groupe):""} · ${esc(d)}</div><div class="meta">Séance 1 · Auto-évaluation : ${S.q_score!=null?S.q_score+" / "+QUIZ.length:"non faite"}</div></div>`;
+ h+=`<h2>1. Recherches</h2>`;
+ THEMES.forEach(t=>{const has=(S["r_"+t.id]||"").trim()||(S["s_"+t.id]||"").trim();if(!has)return;h+=`<h3>${t.t}</h3>${A("r_"+t.id)}<div class="meta">Sources</div>${A("s_"+t.id)}`});
+ if(!THEMES.some(t=>(S["r_"+t.id]||"").trim()))h+=`<div class="ans empty">Aucune recherche renseignée</div>`;
+ h+=`<h2 class="pb">2. Analyse d'un objet / ouvrage</h2><h3>Objet étudié</h3>${A("a_obj")}`;
+ if(S.a_img)h+=`<img src="${esc(S.a_img)}" alt="">`;
+ h+=`<h3>Mise en œuvre</h3>${A("a_mise")}<h3>Fonction et usage</h3>${A("a_fonction")}<h3>Formulation supposée</h3>${A("a_formule")}<h3>Propriétés exploitées</h3>${A("a_props")}<h3>Limites et fin de vie</h3>${A("a_limites")}`;
+ h+=`<h3>Comparaison polymères / plâtre</h3><table><tr><th>Critère</th><th>Polymères</th><th>Plâtre</th></tr>${CMP.map(r=>`<tr><td>${r[1]}</td><td style="white-space:pre-wrap">${esc(S["c_"+r[0]+"_poly"])}</td><td style="white-space:pre-wrap">${esc(S["c_"+r[0]+"_pl"])}</td></tr>`).join("")}</table>`;
+ h+=`<h2 class="pb">3. Synthèse</h2><h3>Définition</h3>${A("y_def")}<h3>Le cycle du plâtre</h3>${A("y_cycle")}<h3>Mots-clés</h3>${A("y_mots")}<h3>Possibilités du matériau pour l'objet</h3>${A("y_poss")}<h3>Expérimentation proposée</h3>${A("y_piste")}<h3>Questions ouvertes</h3>${A("y_q")}`;
+ $("dossier").innerHTML=h;return nm};
+$("bPdf").addEventListener("click",()=>{const nm=buildDossier();const old=document.title;document.title="Platre_S1_"+nm.replace(/\s+/g,"_");
+ try{window.print()}catch(e){toast("Impression bloquée : ouvrez le fichier directement dans votre navigateur")}
+ setTimeout(()=>document.title=old,1500)});
+window.addEventListener("beforeprint",buildDossier);
+
+/* ---------- sauvegarde / chargement ---------- */
+$("bSave").addEventListener("click",()=>{try{const b=new Blob([JSON.stringify(S)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="platre_s1_"+((S.nom||"travail").replace(/\W+/g,"_"))+".json";document.body.appendChild(a);a.click();a.remove();toast("Fichier enregistré")}catch(e){toast("Téléchargement impossible ici")}});
+$("bLoad").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(typeof o!=="object"||!o)throw 0;S=o;save();fill();toast("Travail rechargé")}catch(x){toast("Fichier illisible")}};r.readAsText(f);e.target.value=""});
+$("bClear").addEventListener("click",()=>{$("clearConfirm").hidden=false});
+$("bClearNo").addEventListener("click",()=>{$("clearConfirm").hidden=true});
+$("bClearYes").addEventListener("click",()=>{S={};save();fill();$("clearConfirm").hidden=true;toast("Réponses effacées")});
+
+if(!S.date){S.date=new Date().toISOString().slice(0,10)}
+fill();
+}
+</script>
+</body>
+</html>
